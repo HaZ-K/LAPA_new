@@ -1,16 +1,18 @@
 import os
-import torch
 import sys
+import torch
+import torch_npu
+torch.npu.config.allow_internal_format = False
+torch.npu.set_compile_mode(jit_compile=False)
+from torch_npu import *
+from torch_npu.contrib import transfer_to_npu
+
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms as T
 from PIL import Image
 import numpy as np
 import json
 import random
-
-import torch_npu
-from torch_npu import *
-from torch_npu.contrib import transfer_to_npu
 
 from tqdm import tqdm
 import os
@@ -20,8 +22,7 @@ import argparse
 from PIL import Image
 
 from laq_model import LatentActionQuantization
-torch.npu.config.allow_internal_format = False
-torch.npu.set_compile_mode(jit_compile=False)
+
 
 
 

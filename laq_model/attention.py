@@ -2,16 +2,18 @@ import os
 import math
 import torch
 import torch.nn.functional as F
-from torch import nn, einsum
 import torch_npu
+torch.npu.config.allow_internal_format = False
+torch.npu.set_compile_mode(jit_compile=False)
+from torch import nn, einsum
+from torch_npu import *
 from torch_npu.contrib import transfer_to_npu
 from beartype import beartype
 from typing import Tuple
+import numpy as np
 
 from einops import rearrange, repeat
 
-torch.npu.config.allow_internal_format = False
-torch.npu.set_compile_mode(jit_compile=False)
 
 # helpers
 
@@ -80,6 +82,11 @@ class PEG(nn.Module):
         frame_padding = (2, 0) if self.causal else (1, 1)
 
         x = F.pad(x, (1, 1, 1, 1, *frame_padding), value = 0.)
+        #print("input")
+       # print(x)
+        #np.save("x_output.npy", x.cpu().numpy())  
+        x = np.load("x_output.npy")
+        x = torch.from_numpy(x).float().to('npu')
         x = self.dsconv(x)
 
         x = rearrange(x, 'b d ... -> b ... d')
