@@ -82,11 +82,7 @@ class PEG(nn.Module):
         frame_padding = (2, 0) if self.causal else (1, 1)
 
         x = F.pad(x, (1, 1, 1, 1, *frame_padding), value = 0.)
-        #print("input")
-       # print(x)
         #np.save("x_output.npy", x.cpu().numpy())  
-        x = np.load("x_output.npy")
-        x = torch.from_numpy(x).float().to('npu')
         x = self.dsconv(x)
 
         x = rearrange(x, 'b d ... -> b ... d')
